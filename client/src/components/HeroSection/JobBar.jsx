@@ -1,29 +1,36 @@
+// eslint-disable-next-line
 import { BsThreeDots, BsPlus } from "react-icons/bs";
 import styled from "styled-components";
 import TaskBoard from "./TaskBoard";
 
-const JobBar = ({ title, taskList, handleClick }) => {
+const JobBar = ({ title, taskList, handleClick, handleChange }) => {
   return (
     <JobBarContainer>
       <JobBarHeaderContainer>
         {title} ({taskList.length})
         <JobBarButtonContainer>
-          <BsPlus
+          {title === "New Project" && (
+            <BsPlus
+              style={{
+                scale: "1.5",
+                cursor: "pointer",
+              }}
+              onClick={() => handleClick()}
+            />
+          )}
+          {/* <BsThreeDots
             style={{
               scale: "1.5",
               cursor: "pointer",
             }}
-            onClick={() => handleClick()}
-          />
-          <BsThreeDots
-            style={{
-              scale: "1.5",
-              cursor: "pointer",
-            }}
-          />
+          /> */}
         </JobBarButtonContainer>
       </JobBarHeaderContainer>
-      <TaskBoard taskList={taskList} />
+      <TaskBoard
+        taskList={taskList}
+        handleChange={handleChange}
+        title={title}
+      />
     </JobBarContainer>
   );
 };

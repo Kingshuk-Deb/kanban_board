@@ -1,25 +1,33 @@
 import TaskBox from "./TaskBox";
 import styled from "styled-components";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import BoxTarget from "./BoxTarget";
 
-const TaskBoard = ({ taskList }) => {
+const TaskBoard = ({ taskList, handleChange, title }) => {
   return (
-    <TaskBoxContaiber>
-      {taskList.map((data) => (
-        <TaskBox
-          key={data}
-          title={data.title}
-          type={data.type}
-          date={data.date}
-          priority={data.priority}
-          currentState={data.currentState}
-          submissionDate={data.submissionDate}
-        />
-      ))}
-    </TaskBoxContaiber>
+    <DndProvider backend={HTML5Backend}>
+      <TaskBoxContainer>
+        {taskList.map((data) => (
+          <TaskBox
+            key={data.title}
+            id={data.id}
+            title={data.title}
+            type={data.type}
+            date={data.date}
+            priority={data.priority}
+            currentState={data.currentState}
+            submissionDate={data.submissionDate}
+            listTitle={title}
+          />
+        ))}
+        <BoxTarget handleChange={handleChange} listTitle={title}/>
+      </TaskBoxContainer>
+    </DndProvider>
   );
 };
 
-const TaskBoxContaiber = styled.div`
+const TaskBoxContainer = styled.div`
   background: #bfb9ff;
   border-radius: 20px;
   display: flex;

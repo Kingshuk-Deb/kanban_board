@@ -1,22 +1,100 @@
 import GreetingsBar from "./GreetingsBar";
 import TopBar from "./TopBar";
 import JobBar from "./JobBar";
-import { taskData } from "./data";
+import { months, taskData } from "./data";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const HeroSection = ({ modalOpen, handleModalOpenClick }) => {
+  const [tasks, setTasks] = useState(taskData);
+  useEffect(() => {
+    console.log("changed");
+  }, [tasks]);
+
+  const handleChange = (from, to, task) => {
+    if (from >= to || Math.abs(from - to) !== 1) {
+      console.log("Not permitted");
+      return;
+    }
+    switch (to) {
+      case 1: {
+        let newTasks = JSON.parse(JSON.stringify(tasks));
+        newTasks[from].taskList = newTasks[from].taskList.filter(
+          (data) => data.id !== task.id
+        );
+        newTasks[to].taskList.push({
+          id: uuidv4(),
+          title: task.title,
+          type: task.type,
+          date: task.date,
+          priority: task.priority,
+          currentState: "ongoing",
+          ongoing: true,
+          submitted: false,
+          submissionDate: null,
+        });
+        setTasks(newTasks);
+        break;
+      }
+      case 2: {
+        let newTasks = JSON.parse(JSON.stringify(tasks));
+        newTasks[from].taskList = newTasks[from].taskList.filter(
+          (data) => data.id !== task.id
+        );
+        newTasks[to].taskList.push({
+          id: uuidv4(),
+          title: task.title,
+          type: task.type,
+          date: task.date,
+          priority: task.priority,
+          currentState: "submitted",
+          ongoing: true,
+          submitted: true,
+          submissionDate: `${
+            months[new Date().getMonth()]
+          } ${new Date().getDate()} ${new Date().getFullYear()}`,
+        });
+        setTasks(newTasks);
+        break;
+      }
+      case 3: {
+        let newTasks = JSON.parse(JSON.stringify(tasks));
+        newTasks[from].taskList = newTasks[from].taskList.filter(
+          (data) => data.id !== task.id
+        );
+        newTasks[to].taskList.push({
+          id: uuidv4(),
+          title: task.title,
+          type: task.type,
+          date: task.date,
+          priority: task.priority,
+          currentState: "completed",
+          ongoing: false,
+          submitted: true,
+          submissionDate: task.submissionDate,
+        });
+        setTasks(newTasks);
+        break;
+      }
+      default:
+        console.log("Invalid");
+    }
+  };
+
   return (
     <HeroContainer modalOpen={modalOpen}>
       <TopBar />
       <MainSectionContainer>
         <GreetingsBar />
         <JobBarContainer>
-          {taskData.map((data) => (
+          {tasks.map((data) => (
             <JobBar
-              key={data}
+              key={data.jobType}
               title={data.jobType}
               taskList={data.taskList}
               handleClick={handleModalOpenClick}
+              handleChange={handleChange}
             />
           ))}
         </JobBarContainer>

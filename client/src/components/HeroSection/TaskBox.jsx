@@ -1,22 +1,45 @@
 import { MdAccessTime } from "react-icons/md";
 import { AiOutlineCheckCircle, AiOutlineUpload } from "react-icons/ai";
 import styled from "styled-components";
+import { useDrag } from "react-dnd";
+import { ItemTypes } from "./data";
 
 const TaskBox = ({
+  id,
   title,
   type,
   date,
   priority,
   currentState,
   submissionDate,
+  listTitle,
 }) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.TASK,
+    item: {
+      from: listTitle,
+      task: {
+        id,
+        title,
+        type,
+        date,
+        priority,
+        currentState,
+        submissionDate,
+      },
+    },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
   return (
-    <TaxBoxContainer>
+    <TaxBoxContainer ref={drag} isDragging={isDragging}>
       {title}
       <TaxBoxInnerContainer>
         <TaskTypeContainer type={type}>{type}</TaskTypeContainer>
         <TaxContainer>
-          <StateContainer>
+          <StateContainer type={currentState}>
             {currentState === "completed" ? (
               <>
                 <AiOutlineCheckCircle
@@ -56,7 +79,7 @@ const TaskBox = ({
                   : currentState === "ongoing"
                   ? "#40A4FF"
                   : priority === "HIGH"
-                  ? "#FF7979" 
+                  ? "#FF7979"
                   : "#FFBA53"
               }`,
             }}
@@ -85,6 +108,10 @@ const TaxBoxContainer = styled.div`
   padding: 16px;
   font-size: 16px;
   cursor: pointer;
+  opacity: ${(props) => {
+    if (props.isDragging) return "0.5";
+    return "1";
+  }};
 `;
 
 const TaxBoxInnerContainer = styled.div`
