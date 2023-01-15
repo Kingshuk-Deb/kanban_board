@@ -69,21 +69,7 @@ const TaskBox = ({
               </>
             )}
           </StateContainer>
-          <PriorityContainer
-            style={{
-              background: `${
-                currentState === "completed"
-                  ? "#48409E"
-                  : currentState === "submitted"
-                  ? "#6F6F6F"
-                  : currentState === "ongoing"
-                  ? "#40A4FF"
-                  : priority === "HIGH"
-                  ? "#FF7979"
-                  : "#FFBA53"
-              }`,
-            }}
-          >
+          <PriorityContainer currentState={currentState} priority={priority}>
             {currentState === "completed"
               ? "DONE"
               : currentState === "submitted"
@@ -156,6 +142,14 @@ const PriorityContainer = styled.div`
   color: #fff;
   padding-block: 6px;
   padding-inline: 12px;
+  background: ${(props) => {
+    if (props.currentState === "completed") return "#48409E";
+    if (props.currentState === "submitted") return "#6F6F6F";
+    if (props.currentState === "ongoing") return "#40A4FF";
+    if (props.priority === "HIGH") return "#FF7979";
+    if (props.priority === "MEDIUM") return "#FFBA53";
+    return "#2BA700";
+  }};
 `;
 
 export default TaskBox;

@@ -26,7 +26,7 @@ const TopBar = () => {
         <Line></Line>
         <PeopleContainer>
           {imgs.map((data, index) => (
-            <img
+            <ImgContainer
               key={data}
               src={data}
               alt="human 1"
@@ -35,34 +35,19 @@ const TopBar = () => {
                 position: "absolute",
                 top: -17,
                 left: index * 20,
-                width: "34px",
-                height: "34px",
-                objectFit: "cover",
-                borderRadius: "50%",
                 zIndex: 10 - index,
-                filter: "drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25))",
               }}
             />
           ))}
-          <div
+          <TotalPeopleContainer
             style={{
               position: "absolute",
-              width: "30px",
-              height: "30px",
-              borderRadius: "50%",
               top: -17,
               left: 96,
-              border: "2px solid #fff",
-              color: "#fff",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "12px",
-              cursor: "pointer",
             }}
           >
             10+
-          </div>
+          </TotalPeopleContainer>
         </PeopleContainer>
       </TopBarContainerLeft>
       <TopBarContainerRight>
@@ -97,6 +82,27 @@ const TopBarContainerRight = styled.div`
   gap: 16px;
   justify-content: center;
   align-items: center;
+`;
+
+const ImgContainer = styled.img`
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 50%;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25));
+`;
+
+const TotalPeopleContainer = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
 `;
 
 const ProfileImg = styled.img`

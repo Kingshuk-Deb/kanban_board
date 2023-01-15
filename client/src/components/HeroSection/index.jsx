@@ -3,18 +3,14 @@ import TopBar from "./TopBar";
 import JobBar from "./JobBar";
 import { months, taskData } from "./data";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const HeroSection = ({ modalOpen, handleModalOpenClick }) => {
   const [tasks, setTasks] = useState(taskData);
-  useEffect(() => {
-    console.log("changed");
-  }, [tasks]);
 
   const handleChange = (from, to, task) => {
     if (from >= to || Math.abs(from - to) !== 1) {
-      console.log("Not permitted");
       return;
     }
     switch (to) {

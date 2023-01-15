@@ -27,17 +27,7 @@ const Modal = ({ handleCancelClick }) => {
     <PositionContainer>
       <OuterDivContainer>
         <InnerDivContainer>
-          <div
-            style={{
-              fontFamily: '"Nunito", sans-serif',
-              padding: "16px",
-              fontSize: "24px",
-              color: "#48409E",
-              fontWeight: "900",
-            }}
-          >
-            New Card
-          </div>
+          <ModalTitleContainer>New Card</ModalTitleContainer>
           <div
             style={{
               display: "flex",
@@ -58,7 +48,8 @@ const Modal = ({ handleCancelClick }) => {
                 required
                 id="outlined-required"
                 label="Project Title"
-                defaultValue="Please enter the project tilte"
+                // defaultValue="Please enter the project tilte"
+                placeholder="Please enter the project tilte"
                 style={{
                   width: "100%",
                 }}
@@ -67,7 +58,8 @@ const Modal = ({ handleCancelClick }) => {
                 required
                 id="outlined-required"
                 label="Subject"
-                defaultValue="Please enter the subject"
+                // defaultValue="Please enter the subject"
+                placeholder="Please enter the subject"
                 style={{
                   width: "100%",
                 }}
@@ -82,7 +74,9 @@ const Modal = ({ handleCancelClick }) => {
                 label="Description"
                 multiline
                 rows={6}
-                defaultValue="Add a description"
+                // defaultValue="Add a description"
+                placeholder="Add a description"
+                required
               />
               <div
                 style={{
@@ -93,7 +87,7 @@ const Modal = ({ handleCancelClick }) => {
               >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
-                    label="Date desktop"
+                    label="Start Date"
                     inputFormat="MM/DD/YYYY"
                     value={startDate}
                     onChange={(e) => handleClickOnStartDate(e)}
@@ -102,7 +96,7 @@ const Modal = ({ handleCancelClick }) => {
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
-                    label="Date desktop"
+                    label="End Date"
                     inputFormat="MM/DD/YYYY"
                     value={closeDate}
                     onChange={(e) => handleClickOnCloseDate(e)}
@@ -119,42 +113,14 @@ const Modal = ({ handleCancelClick }) => {
                   }}
                 >
                   {["HIGH", "MEDIUM", "LOW"].map((data) => (
-                    <div
+                    <PriorityButtonContainer
                       onClick={() => handleClickPriority(data)}
                       key={data}
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontSize: "12px",
-                        borderRadius: "20px",
-                        color: `${priority === data ? "#fff" : "#000"}`,
-                        paddingBlock: "8px",
-                        paddingInline: "16px",
-                        background: `${
-                          priority === data
-                            ? data === "HIGH"
-                              ? "#FF7979"
-                              : data === "MEDIUM"
-                              ? "#FFBA53"
-                              : "#2BA700"
-                            : "none"
-                        }`,
-                        border: `${
-                          priority === data
-                            ? "none"
-                            : data === "HIGH"
-                            ? "1px solid #FF7979"
-                            : data === "MEDIUM"
-                            ? "1px solid #FFBA53"
-                            : "1px solid #2BA700"
-                        }`,
-                        width: "36px",
-                        cursor: "pointer",
-                      }}
+                      priority={priority}
+                      data={data}
                     >
                       {data}
-                    </div>
+                    </PriorityButtonContainer>
                   ))}
                 </div>
               </PriorityContainer>
@@ -171,6 +137,42 @@ const Modal = ({ handleCancelClick }) => {
     </PositionContainer>
   );
 };
+
+const PriorityButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  border-radius: 20px;
+  padding-block: 8px;
+  padding-inline: 16px;
+  width: 36px;
+  cursor: pointer;
+  color: ${(props) => {
+    if (props.priority === props.data) return "#fff";
+    return "#000";
+  }};
+  border: ${(props) => {
+    if (props.priority === props.data) return "none";
+    if (props.data === "HIGH") return "1px solid #FF7979";
+    if (props.data === "MEDIUM") return "1px solid #FFBA53";
+    return "1px solid #2BA700";
+  }};
+  background: ${(props) => {
+    if (props.priority !== props.data) return "none";
+    if (props.data === "HIGH") return "#FF7979";
+    if (props.data === "MEDIUM") return "#FFBA53";
+    return "#2BA700";
+  }};
+`;
+
+const ModalTitleContainer = styled.div`
+  font-family: "Nunito", sans-serif;
+  padding: 16px;
+  font-size: 24px;
+  color: #48409e;
+  font-weight: 900;
+`;
 
 const PositionContainer = styled.div`
   position: fixed;
