@@ -2,18 +2,27 @@ import { MdAccessTime } from "react-icons/md";
 import { AiOutlineCheckCircle, AiOutlineUpload } from "react-icons/ai";
 import styled from "styled-components";
 import { useDrag } from "react-dnd";
-import { ItemTypes } from "./data";
+import { ItemTypes, jobTypes } from "./data";
+import { TaskState } from "../../context/TaskContext";
+import { useEffect } from "react";
 
 const TaskBox = ({
   id,
   title,
   type,
+  subject,
+  description,
   date,
   priority,
   currentState,
   submissionDate,
   listTitle,
+  handleModalOpenClick,
 }) => {
+  const { setSelectedTask, selectedTask } = TaskState();
+
+  useEffect(() => {}, [selectedTask]);
+
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TASK,
     item: {
@@ -22,6 +31,8 @@ const TaskBox = ({
         id,
         title,
         type,
+        subject,
+        description,
         date,
         priority,
         currentState,
@@ -34,7 +45,30 @@ const TaskBox = ({
   });
 
   return (
-    <TaxBoxContainer ref={drag} isDragging={isDragging}>
+    <TaxBoxContainer
+      ref={drag}
+      isDragging={isDragging}
+      onClick={() => {
+        setSelectedTask({
+          coloumnType: jobTypes[listTitle],
+          taskContent: {
+            id: id,
+            title: title,
+            type: type,
+            subject: subject,
+            description: description,
+            date: new Date(date),
+            employeeName: "Kelly Snyder",
+            priority: priority,
+            currentState: currentState,
+            ongoing: false,
+            submitted: false,
+            submissionDate: submissionDate,
+          },
+        });
+        handleModalOpenClick();
+      }}
+    >
       {title}
       <TaxBoxInnerContainer>
         <TaskTypeContainer type={type}>{type}</TaskTypeContainer>

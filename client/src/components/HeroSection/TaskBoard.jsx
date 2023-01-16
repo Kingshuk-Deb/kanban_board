@@ -4,7 +4,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import BoxTarget from "./BoxTarget";
 
-const TaskBoard = ({ taskList, handleChange, title }) => {
+const TaskBoard = ({ taskList, handleChange, title, handleModalOpenClick }) => {
   return (
     <DndProvider backend={HTML5Backend}>
       <TaskBoxContainer>
@@ -14,14 +14,17 @@ const TaskBoard = ({ taskList, handleChange, title }) => {
             id={data.id}
             title={data.title}
             type={data.type}
+            subject={data.subject}
+            description={data.description}
             date={data.date}
             priority={data.priority}
             currentState={data.currentState}
             submissionDate={data.submissionDate}
             listTitle={title}
+            handleModalOpenClick={handleModalOpenClick}
           />
         ))}
-        <BoxTarget handleChange={handleChange} listTitle={title}/>
+        <BoxTarget handleChange={handleChange} listTitle={title} />
       </TaskBoxContainer>
     </DndProvider>
   );

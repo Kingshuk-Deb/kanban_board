@@ -1,9 +1,12 @@
-// eslint-disable-next-line
-import { BsThreeDots, BsPlus } from "react-icons/bs";
+import { BsPlus } from "react-icons/bs";
 import styled from "styled-components";
+import { TaskState } from "../../context/TaskContext";
+import { defaulttaskData } from "./data";
 import TaskBoard from "./TaskBoard";
 
 const JobBar = ({ title, taskList, handleClick, handleChange }) => {
+  const { setSelectedTask } = TaskState();
+
   return (
     <JobBarContainer>
       <JobBarHeaderContainer>
@@ -15,21 +18,22 @@ const JobBar = ({ title, taskList, handleClick, handleChange }) => {
                 scale: "1.5",
                 cursor: "pointer",
               }}
-              onClick={() => handleClick()}
+              onClick={() => {
+                setSelectedTask({
+                  coloumnType: 0,
+                  taskContent: defaulttaskData,
+                });
+                handleClick();
+              }}
             />
           )}
-          {/* <BsThreeDots
-            style={{
-              scale: "1.5",
-              cursor: "pointer",
-            }}
-          /> */}
         </JobBarButtonContainer>
       </JobBarHeaderContainer>
       <TaskBoard
         taskList={taskList}
         handleChange={handleChange}
         title={title}
+        handleModalOpenClick={handleClick}
       />
     </JobBarContainer>
   );

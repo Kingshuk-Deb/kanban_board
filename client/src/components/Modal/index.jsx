@@ -1,26 +1,105 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import styled from "styled-components";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
+import { Box, InputLabel } from "@mui/material";
+import { TaskState } from "../../context/TaskContext";
+import { MenuProps, months, names, workTypes } from "../HeroSection/data";
 
 const Modal = ({ handleCancelClick }) => {
-  const [startDate, setStartDate] = useState(new Date());
+  const { selectedTask, tasks, setTasks } = TaskState();
+
+  const [title, setTitle] = useState("");
+  const [subject, setSubject] = useState("");
+  const [description, setDescription] = useState("");
   const [closeDate, setCloseDate] = useState(new Date());
+  const [personName, setPersonName] = useState([]);
+  const [workType, setWorkType] = useState([]);
   const [priority, setPriority] = useState("HIGH");
+  const [updateCall, setUpdateCall] = useState(false);
 
-  const handleClickOnStartDate = (date) => {
-    setStartDate(date);
+  useEffect(() => {
+    setTitle(selectedTask.taskContent.title);
+    setSubject(selectedTask.taskContent.subject);
+    setDescription(selectedTask.taskContent.description);
+    setCloseDate(selectedTask.taskContent.date);
+    setWorkType([selectedTask.taskContent.type]);
+    setPriority(selectedTask.taskContent.priority);
+    setPersonName([selectedTask.taskContent.employeeName]);
+    if (
+      tasks[selectedTask.coloumnType].taskList.find(
+        (data) => data.id === selectedTask.taskContent.id
+      ) !== undefined
+    ) {
+      setUpdateCall(true);
+    }
+  }, [selectedTask, tasks]);
+
+  const handleEmployeeChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(typeof value === "string" ? value.split(",") : value);
   };
 
-  const handleClickOnCloseDate = (date) => {
-    setCloseDate(date);
+  const handleWorkChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setWorkType(typeof value === "string" ? value.split(",") : value);
   };
 
-  const handleClickPriority = (priorityType) => {
-    console.log(priorityType);
-    setPriority(priorityType);
+  const handleUpdateClick = () => {
+    let newTasks = JSON.parse(JSON.stringify(tasks));
+    let index = newTasks[selectedTask.coloumnType].taskList.findIndex(
+      (data) => data.id === selectedTask.taskContent.id
+    );
+    const date = new Date(closeDate);
+    newTasks[selectedTask.coloumnType].taskList[index] = {
+      id: selectedTask.taskContent.id,
+      title,
+      type: workType.toString(),
+      subject: subject,
+      description: description,
+      date: `${
+        months[date.getMonth()]
+      } ${date.getDate()} ${date.getFullYear()}`,
+      priority,
+      currentState: selectedTask.taskContent.currentState,
+      ongoing: selectedTask.taskContent.ongoing,
+      submitted: selectedTask.taskContent.submitted,
+      submissionDate: selectedTask.taskContent.submissionDate,
+    };
+    setTasks(newTasks);
+    handleCancelClick();
+  };
+
+  const handleAddClick = () => {
+    let newTasks = JSON.parse(JSON.stringify(tasks));
+    const date = new Date(closeDate);
+    const data = {
+      id: selectedTask.taskContent.id,
+      title,
+      type: workType.toString(),
+      subject: subject,
+      description: description,
+      date: `${
+        months[date.getMonth()]
+      } ${date.getDate()} ${date.getFullYear()}`,
+      priority,
+      currentState: selectedTask.taskContent.currentState,
+      ongoing: selectedTask.taskContent.ongoing,
+      submitted: selectedTask.taskContent.submitted,
+      submissionDate: selectedTask.taskContent.submissionDate,
+    };
+    newTasks[selectedTask.coloumnType].taskList.push(data);
+    setTasks(newTasks);
+    handleCancelClick();
   };
 
   return (
@@ -48,61 +127,100 @@ const Modal = ({ handleCancelClick }) => {
                 required
                 id="outlined-required"
                 label="Project Title"
-                // defaultValue="Please enter the project tilte"
-                placeholder="Please enter the project tilte"
-                style={{
-                  width: "100%",
-                }}
+                style={{ width: "100%" }}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
               <TextField
                 required
                 id="outlined-required"
                 label="Subject"
-                // defaultValue="Please enter the subject"
-                placeholder="Please enter the subject"
-                style={{
-                  width: "100%",
-                }}
+                style={{ width: "100%" }}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
               />
-              <div
-                style={{
-                  paddingBlock: "4px",
-                }}
-              ></div>
               <TextField
                 id="outlined-multiline-static"
                 label="Description"
                 multiline
                 rows={6}
-                // defaultValue="Add a description"
-                placeholder="Add a description"
                 required
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
+              <div style={{ display: "flex", flex: "3", gap: "12px" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DesktopDatePicker
+                    label="Due Date"
+                    inputFormat="MM/DD/YYYY"
+                    value={closeDate}
+                    onChange={(e) => setCloseDate(e)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </div>
               <div
                 style={{
                   display: "flex",
-                  flex: "3",
-                  gap: "12px",
+                  gap: "24px",
                 }}
               >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    label="Start Date"
-                    inputFormat="MM/DD/YYYY"
-                    value={startDate}
-                    onChange={(e) => handleClickOnStartDate(e)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    label="End Date"
-                    inputFormat="MM/DD/YYYY"
-                    value={closeDate}
-                    onChange={(e) => handleClickOnCloseDate(e)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
+                <div>
+                  <InputLabel>Employee Name</InputLabel>
+                  <Select
+                    label="Chip"
+                    multiline={false}
+                    value={personName}
+                    onChange={handleEmployeeChange}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    style={{
+                      height: "56px",
+                      width: "180px",
+                    }}
+                  >
+                    {names.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <InputLabel>Work Type</InputLabel>
+                  <Select
+                    label="Chip"
+                    multiline={false}
+                    value={workType}
+                    onChange={handleWorkChange}
+                    placeholder="Select Work Type"
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                    style={{
+                      height: "56px",
+                      width: "180px",
+                      color: "#000",
+                    }}
+                  >
+                    {workTypes.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
               </div>
               <PriorityContainer>
                 Priority
@@ -114,7 +232,7 @@ const Modal = ({ handleCancelClick }) => {
                 >
                   {["HIGH", "MEDIUM", "LOW"].map((data) => (
                     <PriorityButtonContainer
-                      onClick={() => handleClickPriority(data)}
+                      onClick={() => setPriority(data)}
                       key={data}
                       priority={priority}
                       data={data}
@@ -130,7 +248,17 @@ const Modal = ({ handleCancelClick }) => {
             <CancelButton onClick={() => handleCancelClick()}>
               CANCEL
             </CancelButton>
-            <AddButton>ADD CARD</AddButton>
+            <AddButton
+              onClick={() => {
+                if (updateCall) {
+                  handleUpdateClick();
+                } else {
+                  handleAddClick();
+                }
+              }}
+            >
+              {updateCall ? `UPDATE ` : `ADD `}CARD
+            </AddButton>
           </ButtonContainer>
         </InnerDivContainer>
       </OuterDivContainer>
@@ -191,8 +319,8 @@ const OuterDivContainer = styled.div`
   top: 0;
   z-index: 10;
   background: #bfb9ff;
-  width: 700px;
-  height: 700px;
+  width: 750px;
+  height: 750px;
   margin: auto;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
   display: flex;

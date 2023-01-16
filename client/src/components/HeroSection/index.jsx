@@ -1,13 +1,13 @@
 import GreetingsBar from "./GreetingsBar";
 import TopBar from "./TopBar";
 import JobBar from "./JobBar";
-import { months, taskData } from "./data";
+import { months } from "./data";
 import styled from "styled-components";
-import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { TaskState } from "../../context/TaskContext";
 
 const HeroSection = ({ modalOpen, handleModalOpenClick }) => {
-  const [tasks, setTasks] = useState(taskData);
+  const { setTasks, tasks } = TaskState();
 
   const handleChange = (from, to, task) => {
     if (from >= to || Math.abs(from - to) !== 1) {
@@ -23,6 +23,8 @@ const HeroSection = ({ modalOpen, handleModalOpenClick }) => {
           id: uuidv4(),
           title: task.title,
           type: task.type,
+          subject: task.subject,
+          description: task.description,
           date: task.date,
           priority: task.priority,
           currentState: "ongoing",
@@ -42,6 +44,8 @@ const HeroSection = ({ modalOpen, handleModalOpenClick }) => {
           id: uuidv4(),
           title: task.title,
           type: task.type,
+          subject: task.subject,
+          description: task.description,
           date: task.date,
           priority: task.priority,
           currentState: "submitted",
@@ -63,6 +67,8 @@ const HeroSection = ({ modalOpen, handleModalOpenClick }) => {
           id: uuidv4(),
           title: task.title,
           type: task.type,
+          subject: task.subject,
+          description: task.description,
           date: task.date,
           priority: task.priority,
           currentState: "completed",

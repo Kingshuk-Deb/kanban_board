@@ -11,6 +11,8 @@ const BoxTarget = ({ handleChange, listTitle }) => {
         id: data.task.id,
         title: data.task.title,
         type: data.task.type,
+        subject: data.task.subject,
+        description: data.task.description,
         date: data.task.date,
         priority: data.task.priority,
         submissionDate: data.task.submissionDate,
