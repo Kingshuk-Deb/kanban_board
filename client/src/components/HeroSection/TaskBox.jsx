@@ -58,7 +58,7 @@ const TaskBox = ({
             subject: subject,
             description: description,
             date: new Date(date),
-            employeeName: "Kelly Snyder",
+            employeeName: "lise",
             priority: priority,
             currentState: currentState,
             ongoing: false,

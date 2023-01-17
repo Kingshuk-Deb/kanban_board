@@ -1,15 +1,20 @@
 import styled from "styled-components";
+import { TaskState } from "../../context/TaskContext";
 
 const handImg =
   "https://s3-alpha-sig.figma.com/img/b71b/64bf/30cd70aca236d986b8828bb5ad1ed8a5?Expires=1674432000&Signature=d4i28oOYRsEILYjD8ssrWJ1oCaSibjNrOoUoM9scfQjiR-3we-w7~AHLOSDiwzWiLQ5iOk2SJVF4-GmNqLePcuafxl0ksxGc5267rzDkFS9BFxYLoO5NnWH19-m1yI5NBBciGY97vNo0dElNh1LxLIBkV8P12H5Il0xJu9w1CgMgjQDR24zGkOMj8FrWWYwCuHZR6lnhTxrwEHCgH168ePeQxoFxwg-h0LX244zhx1r9sgb1dfFkgx5pzplbfZrQ-PrQnZ2QFiWGbWIOEKu4ea9uAbXvSA2-7LyyK~1rS5ADI48lqTkYFoTMYOfVtFSenE6bOoGKL7sD6mZrBMb8wA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4";
 
 const GreetingsBar = () => {
+  const { user } = TaskState();
+
   return (
     <GreetingsBarContainer>
       <GreetingsBarTextSection>
         <GreetingsBarTextSectionHeading>
           Hello
-          <GreetingsBarTextSectionSpan>Stephanie!</GreetingsBarTextSectionSpan>
+          <GreetingsBarTextSectionSpan>
+            {user.firstName}!
+          </GreetingsBarTextSectionSpan>
         </GreetingsBarTextSectionHeading>
         You have 2 new projects to do. Keep up the good work!
       </GreetingsBarTextSection>
@@ -56,7 +61,7 @@ const GreetingsBarTextSectionSpan = styled.span`
 
 const GreetingsBarImage = styled.img`
   width: 128px;
-  aspectr-atio: 185/100;
+  aspect-ratio: 185/100;
 `;
 
 export default GreetingsBar;

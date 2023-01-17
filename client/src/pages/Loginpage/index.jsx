@@ -5,6 +5,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import axios from "axios";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -17,18 +18,47 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
+const names = ["lise", "tamekia", "ranee", "refugio", "sunshine"];
+
+async function login({ username, password }) {
+  if (username === "" || password === "") {
+    return alert("Enter Proper Details");
+  }
+  const headersList = {
+    Accept: "*/*",
+    "Content-Type": "application/json; charset=utf-8",
+  };
+
+  const bodyContent = JSON.stringify({
+    username: username,
+    password: password,
+  });
+
+  const reqOptions = {
+    url: "http://localhost:5001/user/login",
+    method: "POST",
+    headers: headersList,
+    data: bodyContent,
+  };
+
+  try {
+    const response = await axios.request(reqOptions);
+    if (response.data.success) {
+      const firstName = response.data.user.firstName;
+      const userType = response.data.user.userType;
+      const profileImg = response.data.user.profileImg;
+      console.log({ firstName, userType, profileImg });
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("userType", userType);
+      localStorage.setItem("profileImg", profileImg);
+      window.location.replace("/");
+    }
+  } catch (err) {
+    const error = err.response.data.error || err.message;
+    alert(error);
+  }
+}
 
 function getStyles(name, personName, theme) {
   return {
@@ -42,6 +72,7 @@ function getStyles(name, personName, theme) {
 const Loginpage = () => {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
+  const [password, setPassword] = React.useState("");
 
   const handleChange = (event) => {
     const {
@@ -51,6 +82,7 @@ const Loginpage = () => {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    console.log(personName);
   };
 
   return (
@@ -84,9 +116,25 @@ const Loginpage = () => {
                 ))}
               </Select>
             </div>
-            <Input type="password" placeholder="Password" />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
           </MiddleLeft>
-          <LoginButton>Login</LoginButton>
+          <LoginButton
+            onClick={() =>
+              login({
+                username: personName.toString(),
+                password,
+              })
+            }
+          >
+            Login
+          </LoginButton>
         </LeftSide>
         <RightSide>
           <ImgDiv>
@@ -201,6 +249,7 @@ const LoginButton = styled.div`
     0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802);
   border-radius: 5px;
   color: #fff;
+  cursor: pointer;
 `;
 
 export default Loginpage;

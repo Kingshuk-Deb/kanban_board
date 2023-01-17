@@ -13,18 +13,7 @@ export const MenuProps = {
   },
 };
 
-export const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
+export const names = ["lise", "tamekia", "ranee", "refugio", "sunshine"];
 
 export const workTypes = [
   "Software Development",
@@ -65,7 +54,7 @@ export const defaulttaskData = {
   subject: "",
   description: "",
   date: new Date(),
-  employeeName: "Kelly Snyder",
+  employeeName: "lise",
   priority: "LOW",
   currentState: "waiting",
   ongoing: false,

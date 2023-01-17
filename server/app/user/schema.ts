@@ -31,6 +31,11 @@ const userSchema = new Schema(
       enum: ["engineering", "consultanting", "marketing"],
       required: true,
     },
+    userType: {
+      type: String,
+      enum: ["admin", "employee"],
+      required: true,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

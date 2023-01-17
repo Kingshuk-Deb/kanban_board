@@ -9,9 +9,16 @@ const Context = ({ children }) => {
     coloumnType: 0,
     taskContent: defaulttaskData,
   });
+  const [user, setUser] = useState({
+    firstName: "",
+    userType: "",
+    profileImg: "",
+  });
 
   return (
-    <Task.Provider value={{ tasks, setTasks, selectedTask, setSelectedTask }}>
+    <Task.Provider
+      value={{ tasks, setTasks, selectedTask, setSelectedTask, user, setUser }}
+    >
       {children}
     </Task.Provider>
   );

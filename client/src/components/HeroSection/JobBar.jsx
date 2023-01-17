@@ -5,14 +5,14 @@ import { defaulttaskData } from "./data";
 import TaskBoard from "./TaskBoard";
 
 const JobBar = ({ title, taskList, handleClick, handleChange }) => {
-  const { setSelectedTask } = TaskState();
+  const { setSelectedTask, user } = TaskState();
 
   return (
     <JobBarContainer>
       <JobBarHeaderContainer>
         {title} ({taskList.length})
         <JobBarButtonContainer>
-          {title === "New Project" && (
+          {title === "New Project" && user.userType === "admin" && (
             <BsPlus
               style={{
                 scale: "1.5",
@@ -55,8 +55,8 @@ const JobBarHeaderContainer = styled.div`
 
 const JobBarButtonContainer = styled.div`
   display: flex;
-  justifycontent: space-between;
-  alignitems: center;
+  justify-content: space-between;
+  align-items: center;
   gap: 16px;
 `;
 

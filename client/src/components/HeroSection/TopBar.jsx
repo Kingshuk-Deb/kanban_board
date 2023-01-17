@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import styled from "styled-components";
+import { TaskState } from "../../context/TaskContext";
 
 const imgs = [
   "https://s3-alpha-sig.figma.com/img/5237/37b7/cae17c3d5188302163b555d22ab929f5?Expires=1674432000&Signature=L7Wi~yBc49uCv086lGZ6awXISNiJmk3-w3vaX5oXdhAjax6O4Ncg0PLp5s6hIkcxyPQKnTi58k-ltqDBU6WCPfwork2BRhF1JOI6wQjxYNGMWosCOybyIa0k-yQsN58H73sOZKY9JvMOgcsfP6uop1rRo~zJ~u-b6FL0CSrGaFUuhdXsB47MGwq~KIB~5ETxEOwtXWKzzX2bLg2mu0-WR9HzL9LozUVxByM81IHGgSJ0oe2IZntO~S429pvhE-TfIVgEH9vD1hy7di--OS0KpvGdczjMg5a1h6ndpOBWUiRJ0Lhh~fkmPnEXbBzILv7SQKwRdO7fJptL7DsqIabPzA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
@@ -7,10 +9,15 @@ const imgs = [
   "https://s3-alpha-sig.figma.com/img/7fe7/3367/69a5e0d805a9a2e83f84c503a677f75b?Expires=1674432000&Signature=M5vbbvovki2E9PlbNSsjKFUq6o9Jp6OgjgraGx0P3-ZpETTTB5QycKQmMIz5PwWuGOOF1sGMoYVsT-eaaVhwlEPn6aEmrO3Anq3d2d9saPOxzHWu9XC6JVEiBL32FFkiuQh8xek86WOB78sak05XvUpbDmSsWfl4EANa9hAzV6O-Z3SCUzJetW7wFxhij4W7jAWE5mW-cWqy~~PaAWnuZDFv11GsMXgakRUb6xqs7ugh4UBTzanQooUH5-l68HS6O6KNJVOVkFcaJ-F7lr9HQcjBgy2REB-I2GFrEYcF3T1DNaHwH-IUKXoI4dHAH6UQqUzgz-tG-JjVBWZnrSfbSw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
 ];
 
-const profileImg =
-  "https://s3-alpha-sig.figma.com/img/7672/2bd4/56a014395cf7b7f161c2223f8720c704?Expires=1674432000&Signature=MG~3Q6fdfjkaSopWjwLDQKWXPBIY8EKUvtmSiQ24Vq-zscxqbaVWF2a2j9WDEvcwOBmXp2Iz3BOKSIrq6vQ64ypHixyf99dswK6uRNMRxrj7e1RECWu-78LIKTtWMfWID0OlP~5nZSVnRJ9S8EfbuQqOtqVflQpuYTvCbo~W6dlwwmiHebXCf9JGJXrWnb8KIJ8xqOg2F0lC1I0tsmzXUSVQAgztakwQ9iEohL~f2Tf0PMsY8g37afzqIdMXICfvnWF86e0MyqBaeDK8HuWCqTiKNH9sxSynXRMDYyisQHdgoq6xkFNvtiXWQBxV97By4wvTyceT19wBPJ80hgc4Ow__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4";
-
 const TopBar = () => {
+  const [showLogoutButton, setShowLogoutButton] = useState(false);
+  const { user } = TaskState();
+
+  const handleClick = () => {
+    localStorage.setItem("isLoggedIn", "false");
+    window.location.replace("/");
+  };
+
   return (
     <TopBarContainer>
       <TopBarContainerLeft>
@@ -51,8 +58,36 @@ const TopBar = () => {
         </PeopleContainer>
       </TopBarContainerLeft>
       <TopBarContainerRight>
-        <div>Stephanie</div>
-        <ProfileImg src={profileImg} alt="human 1" />
+        <div>{user.firstName}</div>
+        <ProfileImg
+          src={user.profileImg}
+          alt="human 1"
+          onClick={() => {
+            if (showLogoutButton) {
+              setShowLogoutButton(false);
+            } else {
+              setShowLogoutButton(true);
+            }
+          }}
+        />
+        {showLogoutButton && (
+          <div
+            onClick={handleClick}
+            style={{
+              position: "absolute",
+              top: 40,
+              right: 0,
+              background: "#bfb9ff",
+              color: "#fff",
+              paddingBlock: "8px",
+              paddingInline: "16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            Logout
+          </div>
+        )}
       </TopBarContainerRight>
     </TopBarContainer>
   );
@@ -82,6 +117,7 @@ const TopBarContainerRight = styled.div`
   gap: 16px;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const ImgContainer = styled.img`
